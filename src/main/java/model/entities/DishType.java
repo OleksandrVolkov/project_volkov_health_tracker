@@ -2,7 +2,7 @@ package model.entities;
 
 import java.util.List;
 
-public class DishType {
+public class DishType extends Entity{
     protected int id;
     protected String name;
     private List<Dish> dishes;

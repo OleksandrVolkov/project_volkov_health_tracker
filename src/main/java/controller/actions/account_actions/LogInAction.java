@@ -3,6 +3,7 @@ package controller.actions.account_actions;
 import controller.actions.Action;
 import model.data.dao.UserDAO;
 import model.data.services.UserService;
+import model.utility.MD5Handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,8 @@ public class LogInAction implements Action{
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         UserService userService = new UserService();
         String username = request.getParameter("username");
-        String password = request.getParameter("psw");
+        String passwordStr = request.getParameter("psw");
+        String password = MD5Handler.md5Custom(passwordStr);
         String url = "";
         if(userService.verifyUser(username, password)){
             HttpSession httpSession = request.getSession();

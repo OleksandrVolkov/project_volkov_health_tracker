@@ -1,9 +1,12 @@
-package model.dao;
+package model.services;
+
 
 import model.data.dao.CustomDishDAO;
 import model.data.dao.DishTypeDAO;
 import model.data.dao.UserDAO;
-import model.data.dao.connection.ConnectionManager;
+import model.data.services.CustomDishService;
+import model.data.services.DishTypeService;
+import model.data.services.UserService;
 import model.entities.CustomDish;
 import model.entities.DishType;
 import model.entities.Nutrients;
@@ -24,10 +27,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
-public class TestCustomDishDAO {
-    private CustomDishDAO customDishDAO;
-    private DishTypeDAO dishTypeDAO;
-    private UserDAO userDAO;
+public class TestCustomDishService {
+    private CustomDishService customDishService;
+    private DishTypeService dishTypeService;
+    private UserService userService;
 
     @Parameterized.Parameter
     public CustomDish customDish;
@@ -47,12 +50,12 @@ public class TestCustomDishDAO {
     public static Collection data(){
         return Arrays.asList( new Object[][]{
                         {
-                            new CustomDish("NewCustomDish9"),
-                            new Nutrients(122.1, 321.1, 432.1),
-                            new DishType("newDishType9"),
-                            new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email121@gmail.com")
+                                new CustomDish("NewCustomDish6"),
+                                new Nutrients(122.1, 321.1, 432.1),
+                                new DishType("newDishType9"),
+                                new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email152@gmail.com")
                                         .withLifestyle(Lifestyle.ACTIVE).withWeight(87.0).withHeight(187.2).withPassword("root")
-                                        .withUsername("my_username121").withSex(Sex.MALE).withAge(19).build()
+                                        .withUsername("my_username1252").withSex(Sex.MALE).withAge(19).build()
 
                         }
                 }
@@ -62,90 +65,91 @@ public class TestCustomDishDAO {
 
     @Before
     public void init(){
-        customDishDAO = new CustomDishDAO();
-        dishTypeDAO = new DishTypeDAO();
-        userDAO = new UserDAO();
+        customDishService = new CustomDishService();
+        dishTypeService = new DishTypeService();
+        userService = new UserService();
     }
 
+
     public void initialise(){
-        userDAO.create(user);
-        dishTypeDAO.create(dishType);
+        System.out.println(user);
+        userService.createUser(user);
+        System.out.println(user);
+        dishTypeService.createDishType(dishType);
 
         customDish.setNutrients(nutrients);
         customDish.setUserId(user.getId());
         customDish.setDishTypeId(dishType.getId());
-        customDishDAO.create(customDish);
+        customDishService.createCustomDish(customDish);
     }
 
     public void delete(){
-        userDAO.delete(user.getId());
-        dishTypeDAO.delete(dishType.getId());
-        customDishDAO.delete(customDish.getId());
-    }
-
-
-
-    @Test
-    public void testCreate(){
-        initialise();
-        CustomDish curCustomDish = customDishDAO.findEntityById(customDish.getId());
-        assertEquals(customDish, curCustomDish);
-        delete();
+        userService.deleteUserById(user.getId());
+        dishTypeService.deleteDishTypeById(dishType.getId());
+        customDishService.deleteCustomDishById(customDish.getId());
     }
 
     @Test
-    public void testFindAll(){
-        List<CustomDish> customDishes = customDishDAO.findAll();
+    public void testFindAllCustomDishes(){
+        List<CustomDish> customDishes = customDishService.findAllCustomDishes();
         List<Integer> ids = new ArrayList<>();
         for(CustomDish customDish: customDishes)
             ids.add(customDish.getId());
 
         List<CustomDish> foundCustomDishes = new ArrayList<>();
         for(Integer id: ids){
-            CustomDish customDish = customDishDAO.findEntityById(id);
+            CustomDish customDish = customDishService.findCustomDishById(id);
             foundCustomDishes.add(customDish);
         }
         assertEquals(foundCustomDishes, customDishes);
     }
 
     @Test
+    public void testCreate(){
+        initialise();
+        CustomDish curCustomDish = customDishService.findCustomDishById(customDish.getId());
+        assertEquals(customDish, curCustomDish);
+        delete();
+    }
+
+    @Test
     public void testFindEntityById(){
         initialise();
 
-        CustomDish tempCustomDish = customDishDAO.findEntityById(customDish.getId());
+        CustomDish tempCustomDish = customDishService.findCustomDishById(customDish.getId());
         assertEquals(customDish, tempCustomDish);
 
         delete();
     }
 
     @Test
-    public void testDelete(){
+    public void testDeleteCustomDishById(){
         initialise();
         delete();
-        assertNull(customDishDAO.findEntityById(customDish.getId()));
+        assertNull(customDishService.findCustomDishById(customDish.getId()));
     }
 
     @Test
-    public void testUpdate(){
+    public void testUpdateCustomDishById(){
         initialise();
         String name = "NEW NAME!!!";
 
         customDish.setName(name);
 
-        customDishDAO.update(customDish, customDish.getId());
-        CustomDish tempCustomDish = customDishDAO.findEntityById(customDish.getId());
+        customDishService.updateCustomDishById(customDish, customDish.getId());
+        CustomDish tempCustomDish = customDishService.findCustomDishById(customDish.getId());
         assertEquals(customDish, tempCustomDish);
         delete();
     }
 
-    //TODO:: rename ids
     @Test
     public void testGetCustomDishesByUserId(){
         initialise();
-        List<CustomDish> customDishes = customDishDAO.getCustomDishesByUserId(user.getId());
+        initialise();
+        List<CustomDish> customDishes = customDishService.getCustomDishesByUserId(user.getId());
         Integer userId = user.getId();
 
-        List<CustomDish> allCustomDishes = customDishDAO.findAll();
+        List<CustomDish> allCustomDishes = customDishService.findAllCustomDishes();
         List<CustomDish> finalCustomDishes = new ArrayList<>();
         for(CustomDish customDish: allCustomDishes)
             if(customDish.getUserId() == userId)
@@ -153,16 +157,6 @@ public class TestCustomDishDAO {
 
         assertEquals(customDishes, finalCustomDishes);
         delete();
-    }
-
-    @Test
-    public void getLastInsertedCustomDishId(){
-        initialise();
-        List<CustomDish> customDishes = customDishDAO.findAll();
-        CustomDish customDishTemp = customDishes.get(customDishes.size() - 1);
-        int id = customDishDAO.getLastInsertedCustomDishId();
-        assertEquals(customDishTemp.getId(), id);
-
         delete();
     }
 }

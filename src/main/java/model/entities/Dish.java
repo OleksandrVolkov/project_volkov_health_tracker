@@ -1,6 +1,6 @@
 package model.entities;
 
-public class Dish implements Comparable <Dish>{
+public class Dish extends Entity implements Comparable <Dish>{
     protected int id;
     protected String name;
     protected Nutrients nutrients;

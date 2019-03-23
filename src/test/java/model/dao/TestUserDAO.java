@@ -30,9 +30,9 @@ public class TestUserDAO {
     public static Collection data(){
         return Arrays.asList( new Object[][]{
                         {
-                                new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email6@gmail.com")
+                                new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email1211136@gmail.com")
                                         .withLifestyle(Lifestyle.ACTIVE).withWeight(87.0).withHeight(187.2).withPassword("root")
-                                        .withUsername("my_username6").withSex(Sex.MALE).withAge(19).build()
+                                        .withUsername("my_username1211136").withSex(Sex.MALE).withAge(19).build()
                         }
                 }
         );

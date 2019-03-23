@@ -3,7 +3,7 @@ package model.entities;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
 
-public class User {
+public class User extends Entity{
     private Integer id;
     private String name;
     private String surname;
@@ -87,16 +87,16 @@ public class User {
         }
     }
 
-
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", sex=" + sex +
                 ", age=" + age +
                 ", height=" + height +
                 ", weight=" + weight +
@@ -111,15 +111,16 @@ public class User {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
         if (age != user.age) return false;
         if (Double.compare(user.height, height) != 0) return false;
         if (Double.compare(user.weight, weight) != 0) return false;
+        if (!id.equals(user.id)) return false;
         if (!name.equals(user.name)) return false;
         if (!surname.equals(user.surname)) return false;
         if (!username.equals(user.username)) return false;
         if (!password.equals(user.password)) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (sex != user.sex) return false;
         return lifestyle == user.lifestyle;
     }
 
@@ -127,21 +128,21 @@ public class User {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
+        result = id.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + surname.hashCode();
         result = 31 * result + username.hashCode();
         result = 31 * result + password.hashCode();
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + sex.hashCode();
         result = 31 * result + age;
         temp = Double.doubleToLongBits(height);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(weight);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (lifestyle != null ? lifestyle.hashCode() : 0);
+        result = 31 * result + lifestyle.hashCode();
         return result;
     }
-
 
     public Integer getId() {
         return id;
