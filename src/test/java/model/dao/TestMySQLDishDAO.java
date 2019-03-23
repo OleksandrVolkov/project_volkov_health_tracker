@@ -1,9 +1,8 @@
 package model.dao;
 
-import model.data.dao.CustomDishDAO;
-import model.data.dao.DishDAO;
-import model.data.dao.DishTypeDAO;
-import model.data.dao.UserDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLDishDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLDishTypeDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
 import model.entities.*;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
@@ -21,10 +20,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
-public class TestDishDAO {
-    private DishTypeDAO dishTypeDAO;
-    private DishDAO dishDAO;
-    private UserDAO userDAO;
+public class TestMySQLDishDAO {
+    private MySQLDishTypeDAO mySQLDishTypeDAO;
+    private MySQLDishDAO mySQLDishDAO;
+    private MySQLUserDAO mySQLUserDAO;
 
     @Parameterized.Parameter
     public Dish dish;
@@ -59,24 +58,24 @@ public class TestDishDAO {
 
     @Before
     public void init(){
-        dishTypeDAO = new DishTypeDAO();
-        userDAO = new UserDAO();
-        dishDAO = new DishDAO();
+        mySQLDishTypeDAO = new MySQLDishTypeDAO();
+        mySQLUserDAO = new MySQLUserDAO();
+        mySQLDishDAO = new MySQLDishDAO();
     }
 
     public void initialise(){
-        userDAO.create(user);
-        dishTypeDAO.create(dishType);
+        mySQLUserDAO.create(user);
+        mySQLDishTypeDAO.create(dishType);
 
         dish.setNutrients(nutrients);
         dish.setDishTypeId(dishType.getId());
-        dishDAO.create(dish);
+        mySQLDishDAO.create(dish);
     }
 
     public void delete(){
-        userDAO.delete(user.getId());
-        dishTypeDAO.delete(dishType.getId());
-        dishDAO.delete(dish.getId());
+        mySQLUserDAO.delete(user.getId());
+        mySQLDishTypeDAO.delete(dishType.getId());
+        mySQLDishDAO.delete(dish.getId());
     }
 
 
@@ -84,7 +83,7 @@ public class TestDishDAO {
     @Test
     public void testCreate(){
         initialise();
-        Dish curDish = dishDAO.findEntityById(dish.getId());
+        Dish curDish = mySQLDishDAO.findEntityById(dish.getId());
         assertEquals(dish, curDish);
         delete();
     }
@@ -93,19 +92,19 @@ public class TestDishDAO {
     public void testDelete(){
         initialise();
         delete();
-        assertNull(dishDAO.findEntityById(dish.getId()));
+        assertNull(mySQLDishDAO.findEntityById(dish.getId()));
     }
 
     @Test
     public void testFindAll(){
-        List<Dish> dishes = dishDAO.findAll();
+        List<Dish> dishes = mySQLDishDAO.findAll();
         List<Integer> ids = new ArrayList<>();
         for(Dish dish: dishes)
             ids.add(dish.getId());
 
         List<Dish> foundDishes = new ArrayList<>();
         for(Integer id: ids){
-            Dish dish = dishDAO.findEntityById(id);
+            Dish dish = mySQLDishDAO.findEntityById(id);
             foundDishes.add(dish);
         }
         assertEquals(foundDishes, dishes);
@@ -115,7 +114,7 @@ public class TestDishDAO {
     public void testFindEntityById(){
         initialise();
 
-        Dish tempDish = dishDAO.findEntityById(dish.getId());
+        Dish tempDish = mySQLDishDAO.findEntityById(dish.getId());
         assertEquals(dish, tempDish);
 
         delete();
@@ -128,8 +127,8 @@ public class TestDishDAO {
 
         dish.setName(name);
 
-        dishDAO.update(dish, dish.getId());
-        Dish tempDish = dishDAO.findEntityById(dish.getId());
+        mySQLDishDAO.update(dish, dish.getId());
+        Dish tempDish = mySQLDishDAO.findEntityById(dish.getId());
         assertEquals(dish, tempDish);
         delete();
     }
@@ -137,9 +136,9 @@ public class TestDishDAO {
     @Test
     public void getLastInsertedDishes(){
         initialise();
-        List<Dish> dishes = dishDAO.findAll();
+        List<Dish> dishes = mySQLDishDAO.findAll();
         Dish tempDish = dishes.get(dishes.size() - 1);
-        int id = dishDAO.getLastInsertedId();
+        int id = mySQLDishDAO.getLastInsertedId();
         assertEquals(tempDish.getId(), id);
         delete();
     }

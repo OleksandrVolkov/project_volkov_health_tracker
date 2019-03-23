@@ -2,10 +2,10 @@ package controller.actions.body_actions;
 
 import controller.actions.Action;
 import controller.utility.FoodCalculator;
-import model.data.dao.AbstractDAO;
-import model.data.dao.CustomDishDAO;
-import model.data.dao.DishDAO;
-import model.data.dao.UserDAO;
+import model.data.dao.dao_interfaces.AbstractDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLCustomDishDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLDishDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
 import model.entities.Dish;
 import model.entities.User;
 
@@ -13,16 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 public class CheckDietAction implements Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int i = 2;
-        DishDAO dishDAO = new DishDAO();
+        MySQLDishDAO mySQLDishDAO = new MySQLDishDAO();
         List<Dish> dishesList = new ArrayList<>();
 
         String val = request.getParameter("food_item_" + i);
@@ -33,9 +31,9 @@ public class CheckDietAction implements Action {
             System.out.println(temp+" TEMP_____________________");
             AbstractDAO abstractDAO = null;
             if(temp.equals("cus"))
-                abstractDAO = new CustomDishDAO();
+                abstractDAO = new MySQLCustomDishDAO();
             else if(temp.equals("dis"))
-                abstractDAO = new DishDAO();
+                abstractDAO = new MySQLDishDAO();
             String id = notParsedVal.substring(4, notParsedVal.length());
 
             int dishId = Integer.parseInt(id);
@@ -53,8 +51,8 @@ public class CheckDietAction implements Action {
         HttpSession httpSession = request.getSession();
         String username = (String)httpSession.getAttribute("LOGGED_USER");
         System.out.println("USERNAME  :::  " + username);
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.findUserByUsername(username);
+        MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
+        User user = mySQLUserDAO.findUserByUsername(username);
         System.out.println("!!!!!!!!!!" + user);
         System.out.println("THE DIET IS GOOD ::  " + foodCalculator.isWellDiet(user, dishesList));
 

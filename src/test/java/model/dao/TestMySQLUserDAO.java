@@ -1,11 +1,9 @@
 package model.dao;
 
-import model.data.dao.UserDAO;
-import model.data.dao.connection.ConnectionManager;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
-import model.utility.MD5Handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +19,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 //TODO:: GET LAST INSERTED!!!!!?!?!?!?!?!??!
 @RunWith(Parameterized.class)
-public class TestUserDAO {
-    private UserDAO userDAO;
+public class TestMySQLUserDAO {
+    private MySQLUserDAO mySQLUserDAO;
 
     @Parameterized.Parameter
     public User user;
@@ -41,19 +39,19 @@ public class TestUserDAO {
 
     @Before
     public void init(){
-        userDAO = new UserDAO();
+        mySQLUserDAO = new MySQLUserDAO();
     }
 
     @Test
     public void testFindAll(){
-        List<User> users = userDAO.findAll();
+        List<User> users = mySQLUserDAO.findAll();
         List<Integer> ids = new ArrayList<>();
         for(User user: users)
             ids.add(user.getId());
 
         List<User> foundUsers = new ArrayList<>();
         for(Integer id: ids){
-            User user = userDAO.findEntityById(id);
+            User user = mySQLUserDAO.findEntityById(id);
             foundUsers.add(user);
         }
         assertEquals(foundUsers, users);
@@ -61,38 +59,38 @@ public class TestUserDAO {
 
     @Test
     public void testCreate(){
-        userDAO.create(user);
+        mySQLUserDAO.create(user);
         System.out.println("User: " + user);
         System.out.println(user.getId());
-        User curUser = userDAO.findEntityById(user.getId());
+        User curUser = mySQLUserDAO.findEntityById(user.getId());
 //        System.out.println(user);
         System.out.println("Found user: " + curUser);
         assertEquals(user, curUser);
-        userDAO.delete(user.getId());
+        mySQLUserDAO.delete(user.getId());
     }
 
     @Test
     public void testDelete(){
-        userDAO.create(user);
-        userDAO.delete(user.getId());
-        assertNull(userDAO.findEntityById(user.getId()));
+        mySQLUserDAO.create(user);
+        mySQLUserDAO.delete(user.getId());
+        assertNull(mySQLUserDAO.findEntityById(user.getId()));
     }
 
     @Test
     public void testVerify(){
-        userDAO.create(user);
-        boolean isValidated = userDAO.verify(user.getUsername(), user.getPassword());
+        mySQLUserDAO.create(user);
+        boolean isValidated = mySQLUserDAO.verify(user.getUsername(), user.getPassword());
         System.out.println(isValidated);
-        userDAO.delete(user.getId());
+        mySQLUserDAO.delete(user.getId());
         assertTrue(isValidated);
     }
 
     @Test
     public void findUserByUsername(){
-        userDAO.create(user);
+        mySQLUserDAO.create(user);
         String username = user.getUsername();
-        User tempUser = userDAO.findUserByUsername(username);
-        userDAO.delete(user.getId());
+        User tempUser = mySQLUserDAO.findUserByUsername(username);
+        mySQLUserDAO.delete(user.getId());
         assertEquals(user, tempUser);
     }
 
@@ -100,45 +98,45 @@ public class TestUserDAO {
     @Test
     public void testUpdate(){
         String curEmail = "val89689@gmail.com";
-        userDAO.create(user);
+        mySQLUserDAO.create(user);
         user.setEmail(curEmail);
 
-        userDAO.update(user, user.getId());
-        User userTemp = userDAO.findEntityById(user.getId());
+        mySQLUserDAO.update(user, user.getId());
+        User userTemp = mySQLUserDAO.findEntityById(user.getId());
         assertEquals(user, userTemp);
-        userDAO.delete(user.getId());
+        mySQLUserDAO.delete(user.getId());
     }
 
     @Test
     public void testFindEntityById(){
-        userDAO.create(user);
-        User tempUser = userDAO.findEntityById(user.getId());
+        mySQLUserDAO.create(user);
+        User tempUser = mySQLUserDAO.findEntityById(user.getId());
         assertEquals(user, tempUser);
 
-        userDAO.delete(user.getId());
+        mySQLUserDAO.delete(user.getId());
     }
 
     @Test
     public void testIsEmailTaken(){
-        userDAO.create(user);
-        boolean isEmailTaken = userDAO.isEmailTaken(user.getEmail());
-        userDAO.delete(user.getId());
+        mySQLUserDAO.create(user);
+        boolean isEmailTaken = mySQLUserDAO.isEmailTaken(user.getEmail());
+        mySQLUserDAO.delete(user.getId());
         assertTrue(isEmailTaken);
     }
 
     @Test
     public void testIsUsernameTaken(){
-        userDAO.create(user);
-        boolean isUsernameTaken = userDAO.isUsernameTaken(user.getUsername());
-        userDAO.delete(user.getId());
+        mySQLUserDAO.create(user);
+        boolean isUsernameTaken = mySQLUserDAO.isUsernameTaken(user.getUsername());
+        mySQLUserDAO.delete(user.getId());
         assertTrue(isUsernameTaken);
     }
 
     @Test
     public void testGetUserIndexByEmail(){
-        userDAO.create(user);
-        Integer userId = userDAO.getLastInsertedUserId();
+        mySQLUserDAO.create(user);
+        Integer userId = mySQLUserDAO.getLastInsertedUserId();
         assertEquals(user.getId(), userId);
-        userDAO.delete(user.getId());
+        mySQLUserDAO.delete(user.getId());
     }
 }

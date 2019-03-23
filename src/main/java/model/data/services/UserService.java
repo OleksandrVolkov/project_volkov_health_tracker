@@ -1,7 +1,10 @@
 package model.data.services;
 
-import model.data.dao.UserDAO;
+import model.data.dao.dao_factories.UserDAOFactory;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
+import model.data.dao.dao_interfaces.UserDAO;
 import model.entities.User;
+import model.entities.enums.DatabaseType;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -10,18 +13,27 @@ import java.util.List;
 /**
  * <h1>UserService class</h1>
  * UserService provides us an additional layer of abstraction in application to access to the
- * database. There are the vast majority methods that are used in UserDAO class.
+ * database. There are the vast majority methods that are used in MySQLUserDAO class.
  *
  * @author  Oleksandr Volkov
  * @version 1.0
  * @since   2019-03-22
  */
 public class UserService {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
     private static Logger log = Logger.getLogger(DishTypeService.class);
+    /**
+     * This is the object of relative to this class lower layer of abstraction in the application - UserDAO
+     */
     private UserDAO userDAO;
 
+    /**
+     * Constructor initialises the relative DAO object via UserDAOFactory class.
+     */
     public UserService(){
-        userDAO = new UserDAO();
+        userDAO = UserDAOFactory.getUserDAO(DatabaseType.MY_SQL);
     }
 
 

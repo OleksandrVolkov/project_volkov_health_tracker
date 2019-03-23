@@ -1,7 +1,9 @@
 package model.data.services;
 
-import model.data.dao.DishDAO;
+import model.data.dao.dao_factories.DishDAOFactory;
+import model.data.dao.dao_interfaces.DishDAO;
 import model.entities.Dish;
+import model.entities.enums.DatabaseType;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -16,11 +18,20 @@ import java.util.List;
  * @since   2019-03-22
  */
 public class DishService {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
     private static Logger log = Logger.getLogger(CustomDishService.class);
+    /**
+     * This is the object of relative to this class lower layer of abstraction in the application - DishDAO
+     */
     private DishDAO dishDAO;
 
+    /**
+     * Constructor initialises the relative DAO object via DishDAOFactory class.
+     */
     public DishService(){
-        dishDAO = new DishDAO();
+        dishDAO = DishDAOFactory.getDishDAO(DatabaseType.MY_SQL);
     }
 
     /**

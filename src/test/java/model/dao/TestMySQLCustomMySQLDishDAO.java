@@ -1,9 +1,8 @@
 package model.dao;
 
-import model.data.dao.CustomDishDAO;
-import model.data.dao.DishTypeDAO;
-import model.data.dao.UserDAO;
-import model.data.dao.connection.ConnectionManager;
+import model.data.dao.dao_implementations.mysql_dao.MySQLCustomDishDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLDishTypeDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
 import model.entities.CustomDish;
 import model.entities.DishType;
 import model.entities.Nutrients;
@@ -24,10 +23,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
-public class TestCustomDishDAO {
-    private CustomDishDAO customDishDAO;
-    private DishTypeDAO dishTypeDAO;
-    private UserDAO userDAO;
+public class TestMySQLCustomMySQLDishDAO {
+    private MySQLCustomDishDAO mySQLCustomDishDAO;
+    private MySQLDishTypeDAO mySQLDishTypeDAO;
+    private MySQLUserDAO mySQLUserDAO;
 
     @Parameterized.Parameter
     public CustomDish customDish;
@@ -62,25 +61,25 @@ public class TestCustomDishDAO {
 
     @Before
     public void init(){
-        customDishDAO = new CustomDishDAO();
-        dishTypeDAO = new DishTypeDAO();
-        userDAO = new UserDAO();
+        mySQLCustomDishDAO = new MySQLCustomDishDAO();
+        mySQLDishTypeDAO = new MySQLDishTypeDAO();
+        mySQLUserDAO = new MySQLUserDAO();
     }
 
     public void initialise(){
-        userDAO.create(user);
-        dishTypeDAO.create(dishType);
+        mySQLUserDAO.create(user);
+        mySQLDishTypeDAO.create(dishType);
 
         customDish.setNutrients(nutrients);
         customDish.setUserId(user.getId());
         customDish.setDishTypeId(dishType.getId());
-        customDishDAO.create(customDish);
+        mySQLCustomDishDAO.create(customDish);
     }
 
     public void delete(){
-        userDAO.delete(user.getId());
-        dishTypeDAO.delete(dishType.getId());
-        customDishDAO.delete(customDish.getId());
+        mySQLUserDAO.delete(user.getId());
+        mySQLDishTypeDAO.delete(dishType.getId());
+        mySQLCustomDishDAO.delete(customDish.getId());
     }
 
 
@@ -88,21 +87,21 @@ public class TestCustomDishDAO {
     @Test
     public void testCreate(){
         initialise();
-        CustomDish curCustomDish = customDishDAO.findEntityById(customDish.getId());
+        CustomDish curCustomDish = mySQLCustomDishDAO.findEntityById(customDish.getId());
         assertEquals(customDish, curCustomDish);
         delete();
     }
 
     @Test
     public void testFindAll(){
-        List<CustomDish> customDishes = customDishDAO.findAll();
+        List<CustomDish> customDishes = mySQLCustomDishDAO.findAll();
         List<Integer> ids = new ArrayList<>();
         for(CustomDish customDish: customDishes)
             ids.add(customDish.getId());
 
         List<CustomDish> foundCustomDishes = new ArrayList<>();
         for(Integer id: ids){
-            CustomDish customDish = customDishDAO.findEntityById(id);
+            CustomDish customDish = mySQLCustomDishDAO.findEntityById(id);
             foundCustomDishes.add(customDish);
         }
         assertEquals(foundCustomDishes, customDishes);
@@ -112,7 +111,7 @@ public class TestCustomDishDAO {
     public void testFindEntityById(){
         initialise();
 
-        CustomDish tempCustomDish = customDishDAO.findEntityById(customDish.getId());
+        CustomDish tempCustomDish = mySQLCustomDishDAO.findEntityById(customDish.getId());
         assertEquals(customDish, tempCustomDish);
 
         delete();
@@ -122,7 +121,7 @@ public class TestCustomDishDAO {
     public void testDelete(){
         initialise();
         delete();
-        assertNull(customDishDAO.findEntityById(customDish.getId()));
+        assertNull(mySQLCustomDishDAO.findEntityById(customDish.getId()));
     }
 
     @Test
@@ -132,8 +131,8 @@ public class TestCustomDishDAO {
 
         customDish.setName(name);
 
-        customDishDAO.update(customDish, customDish.getId());
-        CustomDish tempCustomDish = customDishDAO.findEntityById(customDish.getId());
+        mySQLCustomDishDAO.update(customDish, customDish.getId());
+        CustomDish tempCustomDish = mySQLCustomDishDAO.findEntityById(customDish.getId());
         assertEquals(customDish, tempCustomDish);
         delete();
     }
@@ -142,10 +141,10 @@ public class TestCustomDishDAO {
     @Test
     public void testGetCustomDishesByUserId(){
         initialise();
-        List<CustomDish> customDishes = customDishDAO.getCustomDishesByUserId(user.getId());
+        List<CustomDish> customDishes = mySQLCustomDishDAO.getCustomDishesByUserId(user.getId());
         Integer userId = user.getId();
 
-        List<CustomDish> allCustomDishes = customDishDAO.findAll();
+        List<CustomDish> allCustomDishes = mySQLCustomDishDAO.findAll();
         List<CustomDish> finalCustomDishes = new ArrayList<>();
         for(CustomDish customDish: allCustomDishes)
             if(customDish.getUserId() == userId)
@@ -158,9 +157,9 @@ public class TestCustomDishDAO {
     @Test
     public void getLastInsertedCustomDishId(){
         initialise();
-        List<CustomDish> customDishes = customDishDAO.findAll();
+        List<CustomDish> customDishes = mySQLCustomDishDAO.findAll();
         CustomDish customDishTemp = customDishes.get(customDishes.size() - 1);
-        int id = customDishDAO.getLastInsertedCustomDishId();
+        int id = mySQLCustomDishDAO.getLastInsertedCustomDishId();
         assertEquals(customDishTemp.getId(), id);
 
         delete();

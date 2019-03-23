@@ -1,9 +1,8 @@
-package model.data.dao;
+package model.data.dao.dao_implementations.mysql_dao;
 
-import model.data.dao.connection.ConnectionManager;
 import model.data.dao.connection.ConnectionPool;
-import model.entities.Dish;
-import model.entities.Nutrients;
+import model.data.dao.dao_interfaces.DishTypeDAO;
+import model.entities.DishType;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -13,43 +12,51 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- *  <h1>DishDAO class</h1>
- *  DishDAO represents a way to access database to the corresponding to the
- *  Dish entity table "dishes" via JDBC API by SQL server.
+ * <h1>MySQLDishTypeDAO class</h1>
+ *  MySQLDishTypeDAO represents a way to access database to the corresponding to the
+ *  DishType entity table "dish_types" via JDBC API by SQL server using MySQL implementation.
  *  It represents the way to access to the value needed and make basic CRUD (create,
  *  read, update, delete) operations and some more added functionality.
  *  Moreover, it gives the opportunity to initialize the entity
- *  objects(Dish class) on the side of model which makes it easier to manipulate with the objects
+ *  objects(DishType class) on the side of model which makes it easier to manipulate with the objects
  *  in the application in the object-oriented way.
- *  It extends an abstract AbstractDAO class and therefore overrides some its methods.
+ *  It implements a DishTypeDAO interface and therefore overrides some its methods.
  *
  *
  * @author  Oleksandr Volkov
  * @version 1.0
  * @since   2019-03-22
  */
-
-public class DishDAO extends AbstractDAO<Dish> {
-    private static Logger log = Logger.getLogger(DishDAO.class);
-//    private ConnectionManager connectionManager;
+public class MySQLDishTypeDAO implements DishTypeDAO {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(MySQLDishTypeDAO.class);
+    /**
+     * ConnectionPool to handle multiple connections from various threads
+     */
     private ConnectionPool connectionPool;
-
-    public DishDAO(){
+    /**
+     * Constructor of the class to instantiate connectionPool field
+     */
+    public MySQLDishTypeDAO(){
         connectionPool = new ConnectionPool();
     }
+
     /**
-     * This method is used to find all dishes from the corresponding table in the
+     * This method is used to find all dish types from the corresponding table in the
      * database.
-     * @return List of all of the dishes available in the table.
+     * @return List of all of the dish types available in the table.
      */
     @Override
-    public List<Dish> findAll() {
-        log.info("Finding all dishes");
-        String query = "SELECT * FROM dishes;";
+    public List<DishType> findAll() {
+        log.trace("Finding all dish types");
+        List<DishType> dishTypes = new ArrayList<>();
+        String query = "SELECT * FROM dish_types";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        List<Dish> dishes = new ArrayList<>();
         Connection connection = null;
         try {
             DataSource dataSource = connectionPool.setUpPool();
@@ -62,21 +69,11 @@ public class DishDAO extends AbstractDAO<Dish> {
             while (resultSet.next()){
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
-                int dishTypeId = resultSet.getInt("dish_type_id");
-                double proteins = resultSet.getDouble("proteins");
-                double carbohydrates = resultSet.getDouble("carbohydrates");
-                double fats = resultSet.getDouble("fats");
-
-
-                Nutrients nutrients = new Nutrients(proteins, carbohydrates, fats);
-                Dish dish = new Dish();
-                dish.setName(name);
-                dish.setNutrients(nutrients);
-                dish.setDishTypeId(dishTypeId);
-                dish.setId(id);
-                log.trace("Obtained dish: " + dish);
+                DishType dishType = new DishType(name);
+                dishType.setId(id);
+                log.trace("Obtained dish type: " + dishType);
                 log.trace("Adding to the list");
-                dishes.add(dish);
+                dishTypes.add(dishType);
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
@@ -94,25 +91,23 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-
-        log.trace("Returning all dishes");
-        return dishes;
+        log.trace("Returning dish types");
+        return dishTypes;
     }
 
     /**
-     * This method is used to find dish by its id in the database.
-     * @param id This is the id of the dish is needed to find.
-     * @return Dish It returns the dish by the given id.
+     * This method is used to find dish type by its id in the database.
+     * @param id This is the id of the dish type is needed to find.
+     * @return DishType It returns the dish type by the given id.
      */
     @Override
-    public Dish findEntityById(int id) {
-        log.info("Finding dish by id = " + id);
-        String query = "SELECT * FROM dishes WHERE id = ?";
+    public DishType findEntityById(int id) {
+        log.trace("Finding dish type by id = " + id);
+        String query = "SELECT * FROM dish_types WHERE id = ?";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Dish dish = null;
+        DishType dishType = null;
         Connection connection = null;
-
         try {
             DataSource dataSource = connectionPool.setUpPool();
             log.trace("Creating connection");
@@ -120,22 +115,12 @@ public class DishDAO extends AbstractDAO<Dish> {
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
-            log.trace("Creating result set");
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 String name = resultSet.getString("name");
-                int dishTypeId = resultSet.getInt("dish_type_id");
-                double proteins = resultSet.getDouble("proteins");
-                double carbohydrates = resultSet.getDouble("carbohydrates");
-                double fats = resultSet.getDouble("fats");
-
-                Nutrients nutrients = new Nutrients(proteins, carbohydrates, fats);
-                dish = new Dish();
-                dish.setName(name);
-                dish.setDishTypeId(dishTypeId);
-                dish.setNutrients(nutrients);
-                dish.setId(id);
-                log.trace("Found dish: " + dish);
+                dishType = new DishType(name);
+                dishType.setId(id);
+                log.trace("Found dish type: " + dishType);
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
@@ -153,19 +138,21 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-        return dish;
+
+        log.trace("Returning dish type");
+        return dishType;
     }
 
     /**
-     * This method is used to delete dish by its id.
-     * @param id This is id of the dish is needed to delete.
-     * @return boolean It returns the boolean value depending on whether dish was successfully deleted.
+     * This method is used to delete dish type by its id.
+     * @param id This is id of the dish type is needed to delete.
+     * @return boolean It returns the boolean value depending on whether dish type was successfully deleted.
      * (by given id)
      */
     @Override
     public boolean delete(int id) {
-        log.trace("Deleting dish by id = " + id);
-        String query = "DELETE FROM dishes WHERE id = ?";
+        log.trace("Deleting a dish type by id = " + id);
+        String query = "DELETE FROM dish_types WHERE id = ?";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Connection connection = null;
@@ -177,7 +164,7 @@ public class DishDAO extends AbstractDAO<Dish> {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
-            log.trace("Dish was successfully deleted");
+            log.trace("Dish type was successfully deleted");
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
@@ -195,21 +182,19 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-        log.trace("Dish was not successfully deleted");
+        log.trace("Dish type was not deleted");
         return false;
     }
 
     /**
-     * This method is used to create dish by given object of the corresponding class.
-     * @param dish This is the item which values will be inserted into the table "dishes".
-     * @return boolean It returns the boolean value depending on whether dish was successfully created.
+     * This method is used to create dish type by given object of the corresponding class.
+     * @param dishType This is the item which values will be inserted into the table "dish_types".
+     * @return boolean It returns the boolean value depending on whether dish type was successfully created.
      */
     @Override
-    public boolean create(Dish dish) {
-        log.trace("Craeting dish");
-        String query = "INSERT INTO dishes(name, proteins, carbohydrates, fats, dish_type_id) " +
-                "VALUES(?,?,?,?,?);";
-
+    public boolean create(DishType dishType) {
+        log.trace("Creating dish type");
+        String query = "INSERT INTO dish_types(name) VALUES(?);";
         PreparedStatement preparedStatement = null;
         Connection connection = null;
         try {
@@ -218,16 +203,12 @@ public class DishDAO extends AbstractDAO<Dish> {
             connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, dish.getName());
-            preparedStatement.setDouble(2, dish.getNutrients().getProteins());
-            preparedStatement.setDouble(3, dish.getNutrients().getCarbohydrates());
-            preparedStatement.setDouble(4, dish.getNutrients().getFats());
-            preparedStatement.setInt(5, dish.getDishTypeId());
+            preparedStatement.setString(1, dishType.getName());
             preparedStatement.execute();
 
-
-            dish.setId(getLastInsertedId());
-            log.trace("Dish was successfully created: " + dish);
+            Integer id = getLastInsertedDishTypeId();
+            dishType.setId(id);
+            log.trace("Dish type is successfully created: " + dishType);
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
@@ -243,21 +224,20 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-        log.trace("Dish was not successfully created");
+        log.trace("Dish type was't created");
         return false;
     }
 
     /**
-     * This method is used to update dish value in the database by its key.
-     * @param dish This is the dish which values will be inserted into the table "dishes"
+     * This method is used to update dish type value in the database by its key.
+     * @param dishType This is the dishType which values will be inserted into the table "dish_types"
      * @param key This is the id which is used to update the corresponding value
-     * @return Dish It returns given dish
+     * @return DishType It returns given user
      */
     @Override
-    public Dish update(Dish dish, int key) {
-        log.trace("Updating dish with id = " + key);
-        String query = "UPDATE dishes SET name = ?, proteins = ?, carbohydrates = ?, fats = ?, " +
-                "dish_type_id = ? WHERE id = ?;";
+    public DishType update(DishType dishType, int key) {
+        log.trace("Updating dish type with id = " + key);
+        String query = "UPDATE dish_types SET name = ? WHERE id = ?;";
 
         PreparedStatement preparedStatement = null;
         Connection connection = null;
@@ -267,12 +247,9 @@ public class DishDAO extends AbstractDAO<Dish> {
             connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, dish.getName());
-            preparedStatement.setDouble(2, dish.getNutrients().getProteins());
-            preparedStatement.setDouble(3, dish.getNutrients().getCarbohydrates());
-            preparedStatement.setDouble(4, dish.getNutrients().getFats());
-            preparedStatement.setInt(5, dish.getDishTypeId());
-            preparedStatement.setInt(6, key);
+            preparedStatement.setString(1, dishType.getName());
+            preparedStatement.setInt(2, key);
+
             preparedStatement.execute();
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
@@ -288,19 +265,20 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-        log.trace("Returning obtained dishes");
-        return dish;
+        log.trace("Dish type id updated");
+        return dishType;
     }
 
+
     /**
-     * This method is used to get index of the last inserted dish.
-     * It is mainly used while creating dish so that get its index for
+     * This method is used to get index of the last inserted dish type.
+     * It is mainly used while creating dish type so that get its index for
      * future handling in the application.
-     * @return Integer It returns the index of the last inserted dish.
+     * @return Integer It returns the index of the last inserted dish type.
      */
-    public int getLastInsertedId(){
-        log.trace("Getting last inserted dish id");
-        String query = "SELECT MAX(ID) AS max_id FROM dishes;";
+    public synchronized Integer getLastInsertedDishTypeId(){
+        log.trace("Getting last inserted dish type id");
+        String query = "SELECT MAX( id ) AS max_id FROM dish_types;";
         int id = 0;
 
         PreparedStatement preparedStatement = null;
@@ -314,15 +292,15 @@ public class DishDAO extends AbstractDAO<Dish> {
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
             resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 id = resultSet.getInt("max_id");
             }
-            log.trace("Dish id [" + id + "] is returned");
+            log.trace("DishType id [" + id + "] is returned");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } finally{
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
@@ -334,7 +312,7 @@ public class DishDAO extends AbstractDAO<Dish> {
                 e.printStackTrace();
             }
         }
-        log.trace("Returning last inserted dish id");
+        log.trace("Returning last inserted dish type id");
         return id;
     }
 }

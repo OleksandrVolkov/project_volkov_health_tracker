@@ -1,8 +1,5 @@
 package model.services;
 
-import model.data.dao.DishDAO;
-import model.data.dao.DishTypeDAO;
-import model.data.dao.UserDAO;
 import model.data.services.DishService;
 import model.data.services.DishTypeService;
 import model.data.services.UserService;

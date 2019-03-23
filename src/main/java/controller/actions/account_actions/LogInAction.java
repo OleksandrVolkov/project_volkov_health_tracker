@@ -1,7 +1,6 @@
 package controller.actions.account_actions;
 
 import controller.actions.Action;
-import model.data.dao.UserDAO;
 import model.data.services.UserService;
 import model.utility.MD5Handler;
 

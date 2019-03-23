@@ -1,7 +1,7 @@
-package model.data.dao;
+package model.data.dao.dao_implementations.mysql_dao;
 
-import model.data.dao.connection.ConnectionManager;
 import model.data.dao.connection.ConnectionPool;
+import model.data.dao.dao_interfaces.UserDAO;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>UserDAO class</h1>
- *  UserDAO represents a way to access database to the corresponding to the
- *  User entity table "users" via JDBC API by SQL server.
+ * <h1>MySQLUserDAO class</h1>
+ *  MySQLUserDAO represents a way to access database to the corresponding to the
+ *  User entity table "users" via JDBC API by SQL server using MySQL implementation.
  *  It represents the way to access to the value needed and make basic CRUD (create,
  *  read, update, delete) operations and some more added functionality.
  *  Moreover, it gives the opportunity to initialize the entity
  *  objects(User class) on the side of model which makes it easier to manipulate with the objects
  *  in the application in the object-oriented way.
- *  It extends an abstract AbstractDAO class and therefore overrides some its methods.
+ *  It implements a UserDAO interface and therefore overrides some its methods.
  *
  *
  * @author  Oleksandr Volkov
@@ -30,14 +30,23 @@ import java.util.List;
  * @since   2019-03-22
  */
 
-public class UserDAO extends AbstractDAO<User> {
-    private static Logger log = Logger.getLogger(UserDAO.class);
-//    private ConnectionManager connectionManager;
+public class MySQLUserDAO implements UserDAO {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(MySQLUserDAO.class);
+    /**
+     * ConnectionPool to handle multiple connections from various threads
+     */
     private ConnectionPool connectionPool;
 
-    public UserDAO(){
+    /**
+     * Constructor of the class to instantiate connectionPool field
+     */
+    public MySQLUserDAO(){
         connectionPool = new ConnectionPool();
     }
+
     /**
      * This method is used to find all users from the corresponding table in the
      * database.

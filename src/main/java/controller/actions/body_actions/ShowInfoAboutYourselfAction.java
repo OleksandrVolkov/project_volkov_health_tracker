@@ -1,9 +1,8 @@
 package controller.actions.body_actions;
 
 import controller.actions.Action;
-import model.data.dao.UserDAO;
+import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
 import model.entities.User;
-import model.entities.enums.Lifestyle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +14,8 @@ public class ShowInfoAboutYourselfAction implements Action{
         HttpSession httpSession = request.getSession();
         String username = (String)httpSession.getAttribute("LOGGED_USER");
         System.out.println("USERNAME  :::  " + username);
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.findUserByUsername(username);
+        MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
+        User user = mySQLUserDAO.findUserByUsername(username);
 
 
         request.setAttribute("id", user.getId());

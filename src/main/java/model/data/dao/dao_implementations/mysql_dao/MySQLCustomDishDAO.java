@@ -1,9 +1,8 @@
-package model.data.dao;
+package model.data.dao.dao_implementations.mysql_dao;
 
-import model.data.dao.connection.ConnectionManager;
 import model.data.dao.connection.ConnectionPool;
+import model.data.dao.dao_interfaces.CustomDishDAO;
 import model.entities.CustomDish;
-import model.entities.Dish;
 import model.entities.Nutrients;
 import org.apache.log4j.Logger;
 
@@ -16,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  <h1>CustomDishDAO class</h1>
- *  CustomDishDAO represents a way to access database to the corresponding to the
- *  CustomDish entity table "custom_dish" via JDBC API by SQL server.
+ *  <h1>MySQLCustomDishDAO class</h1>
+ *  MySQLCustomDishDAO represents a way to access database to the corresponding to the
+ *  CustomDish entity table "custom_dish" via JDBC API by SQL server using MySQL implementation.
  *  It represents the way to access to the value needed and make basic CRUD (create,
  *  read, update, delete) operations and some more added functionality.
  *  Moreover, it gives the opportunity to initialize the entity
  *  objects(CustomDish class) on the side of model which makes it easier to manipulate with the objects
  *  in the application in the object-oriented way.
- *  It extends an abstract AbstractDAO class and therefore overrides some its methods.
+ *  It implements a CustomDish interface and therefore overrides some its methods.
  *
  *
  * @author  Oleksandr Volkov
@@ -32,13 +31,19 @@ import java.util.List;
  * @since   2019-03-22
  */
 
-public class CustomDishDAO extends AbstractDAO<CustomDish> {
-    private static Logger log = Logger.getLogger(CustomDishDAO.class);
-
-//    private ConnectionManager connectionManager;
+public class MySQLCustomDishDAO implements CustomDishDAO {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(MySQLCustomDishDAO.class);
+    /**
+     * ConnectionPool to handle multiple connections from various threads
+     */
     private ConnectionPool connectionPool;
-
-    public CustomDishDAO(){
+    /**
+     * Constructor of the class to instantiate connectionPool field
+     */
+    public MySQLCustomDishDAO(){
         connectionPool = new ConnectionPool();
     }
 
