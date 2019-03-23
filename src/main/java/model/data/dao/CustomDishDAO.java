@@ -1,10 +1,14 @@
 package model.data.dao;
 
+import model.data.dao.connection.ConnectionManager;
+import model.data.dao.connection.ConnectionPool;
 import model.entities.CustomDish;
 import model.entities.Dish;
 import model.entities.Nutrients;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +35,13 @@ import java.util.List;
 public class CustomDishDAO extends AbstractDAO<CustomDish> {
     private static Logger log = Logger.getLogger(CustomDishDAO.class);
 
+//    private ConnectionManager connectionManager;
+    private ConnectionPool connectionPool;
+
+    public CustomDishDAO(){
+        connectionPool = new ConnectionPool();
+    }
+
     /**
      * This method is used to find all custom dishes from the corresponding table in the
      * database.
@@ -43,7 +54,11 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<CustomDish> customDishes = new ArrayList<>();
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
@@ -70,12 +85,16 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
                 try {
                     if(resultSet != null)
                         resultSet.close();
                     if(preparedStatement != null)
                         preparedStatement.close();
+                    if(connection != null)
+                        connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -94,9 +113,14 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
         log.trace("Finding custom dish by id = " + id);
         String query = "SELECT * FROM custom_dishes WHERE id = ?";
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         ResultSet resultSet = null;
         CustomDish customDish = null;
+
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
@@ -121,12 +145,16 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -146,7 +174,11 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
         log.info("Deleting custom dish by id = " + id);
         String query = "DELETE FROM custom_dishes WHERE id = ?";
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
@@ -155,10 +187,14 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -179,8 +215,11 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
                 "VALUES(?,?,?,?,?,?);";
 
         PreparedStatement preparedStatement = null;
-
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, customDish.getName());
@@ -197,10 +236,14 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -222,7 +265,11 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
                 "dish_type_id = ?, user_id = ? WHERE id = ?;";
 
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, customDish.getName());
@@ -236,10 +283,14 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             log.trace("Custom dish was successfully updated");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -259,8 +310,12 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
         String query = "SELECT * FROM custom_dishes WHERE user_id = ?";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         List<CustomDish> customDishes = new ArrayList<>();
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, userId);
@@ -287,12 +342,16 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -314,7 +373,11 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Craeting result set");
@@ -324,10 +387,16 @@ public class CustomDishDAO extends AbstractDAO<CustomDish> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

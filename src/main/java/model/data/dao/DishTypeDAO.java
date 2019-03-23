@@ -1,9 +1,13 @@
 package model.data.dao;
 
+import model.data.dao.connection.ConnectionManager;
+import model.data.dao.connection.ConnectionPool;
 import model.entities.Dish;
 import model.entities.DishType;
 import org.apache.log4j.Logger;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,6 +32,14 @@ import java.util.List;
  */
 public class DishTypeDAO extends AbstractDAO<DishType> {
     private static Logger log = Logger.getLogger(DishTypeDAO.class);
+//    private ConnectionManager connectionManager;
+    private ConnectionPool connectionPool;
+
+    public DishTypeDAO(){
+//        connectionManager = new ConnectionManager();
+        connectionPool = new ConnectionPool();
+    }
+
     /**
      * This method is used to find all dish types from the corresponding table in the
      * database.
@@ -40,7 +52,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
         String query = "SELECT * FROM dish_types";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
@@ -56,12 +72,16 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -82,7 +102,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         DishType dishType = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
@@ -95,12 +119,16 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -122,7 +150,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
         String query = "DELETE FROM dish_types WHERE id = ?";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
@@ -131,12 +163,16 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -155,8 +191,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
         log.trace("Creating dish type");
         String query = "INSERT INTO dish_types(name) VALUES(?);";
         PreparedStatement preparedStatement = null;
-
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, dishType.getName());
@@ -168,10 +207,14 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -192,7 +235,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
         String query = "UPDATE dish_types SET name = ? WHERE id = ?;";
 
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, dishType.getName());
@@ -201,10 +248,14 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             preparedStatement.execute();
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -227,7 +278,11 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
@@ -238,10 +293,16 @@ public class DishTypeDAO extends AbstractDAO<DishType> {
             log.trace("DishType id [" + id + "] is returned");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

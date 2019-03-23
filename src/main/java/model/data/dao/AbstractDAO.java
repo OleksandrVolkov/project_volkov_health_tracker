@@ -25,16 +25,16 @@ public abstract class AbstractDAO<T extends Entity> {
      * and initialise such JDBC interfaces as ResultSet, PreparedStatement
      * and so on
      */
-    protected Connection connection;
+//    protected Connection connection;
 
 
     /**
      * A constructor to initialise connection with the static method getConnection
      * from ConnectionManager class
      */
-    public AbstractDAO(){
-        this.connection = ConnectionManager.getConnection();
-    }
+//    public AbstractDAO(){
+//        this.connection = ConnectionManager.getConnection();
+//    }
 
     /**
      * This method is used to find all entities from the corresponding table in the

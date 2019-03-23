@@ -1,10 +1,13 @@
 package model.data.dao;
 
+import model.data.dao.connection.ConnectionManager;
+import model.data.dao.connection.ConnectionPool;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
 import model.utility.MD5Handler;
 import org.apache.log4j.Logger;
+import javax.sql.DataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,9 +31,13 @@ import java.util.List;
  */
 
 public class UserDAO extends AbstractDAO<User> {
-
     private static Logger log = Logger.getLogger(UserDAO.class);
+//    private ConnectionManager connectionManager;
+    private ConnectionPool connectionPool;
 
+    public UserDAO(){
+        connectionPool = new ConnectionPool();
+    }
     /**
      * This method is used to find all users from the corresponding table in the
      * database.
@@ -44,7 +51,12 @@ public class UserDAO extends AbstractDAO<User> {
         PreparedStatement  preparedStatement = null;
         ResultSet resultSet = null;
         List<User> users = new ArrayList<>();
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
@@ -83,12 +95,16 @@ public class UserDAO extends AbstractDAO<User> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close result set: " + e);
                 log.trace("Can't close prepared statement: " + e);
@@ -109,13 +125,23 @@ public class UserDAO extends AbstractDAO<User> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         User user = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            System.out.println("CREATING CONNECTIONS");
+            log.trace("Creating connection");
+//            connection = connectionManager.getConnection();
+            connection = dataSource.getConnection();
+            connectionPool.printDbStatus();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
             log.trace("Creating result set");
             resultSet = preparedStatement.executeQuery();
+            System.out.println("BEFORE IF");
             if (resultSet.next()){
+                System.out.println("INTO IF!!!!!!");
                 log.trace("Getting values from result set");
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
@@ -141,16 +167,22 @@ public class UserDAO extends AbstractDAO<User> {
                         .withSex(sex)
                         .withUsername(username)
                         .build();
+                System.out.println("UUUSSSEEERR:  " + user);
                 log.trace("Obtained user: " + user);
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+            System.err.println(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close result set: " + e);
                 log.trace("Can't close prepared statement: " + e);
@@ -170,17 +202,26 @@ public class UserDAO extends AbstractDAO<User> {
         log.info("Deleting user by id = " + id);
         String query = "DELETE FROM users WHERE id = ?";
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
             }
@@ -200,8 +241,14 @@ public class UserDAO extends AbstractDAO<User> {
                 "VALUES(?,?,?,?,?,?,?,?,?,?);";
 
         PreparedStatement preparedStatement = null;
-
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
+            connectionPool.printDbStatus();
+
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, user.getName());
@@ -226,10 +273,16 @@ public class UserDAO extends AbstractDAO<User> {
             return true;
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println(e);
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
             }
@@ -250,7 +303,12 @@ public class UserDAO extends AbstractDAO<User> {
                 " height = ?, weight = ?, lifestyle = ?, age = ?, sex = ? WHERE id = ?;";
 
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, user.getName());
@@ -269,10 +327,14 @@ public class UserDAO extends AbstractDAO<User> {
             log.trace("User with id = " + key + " is created");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
             }
@@ -289,14 +351,16 @@ public class UserDAO extends AbstractDAO<User> {
      * @return boolean It returns the boolean value depending on whether user was successfully validated.
      */
     public boolean verify(String username, String password){
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
         log.info("Verifying user with username = " + username);
         String query = "SELECT * FROM users WHERE username = ? AND password = ?;";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
@@ -310,12 +374,16 @@ public class UserDAO extends AbstractDAO<User> {
             log.trace("User not found");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(resultSet != null)
                     resultSet.close();
                 if(preparedStatement != null)
                     preparedStatement.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
                 log.trace("Can't close result set: " + e);
@@ -335,7 +403,12 @@ public class UserDAO extends AbstractDAO<User> {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
@@ -348,10 +421,16 @@ public class UserDAO extends AbstractDAO<User> {
             log.trace("Username is not taken");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
                 log.trace("Can't close result set: " + e);
@@ -371,7 +450,12 @@ public class UserDAO extends AbstractDAO<User> {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, email);
@@ -384,10 +468,16 @@ public class UserDAO extends AbstractDAO<User> {
             log.trace("Email is not taken");
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally{
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
                 log.trace("Can't close result set: " + e);
@@ -408,7 +498,12 @@ public class UserDAO extends AbstractDAO<User> {
         User user = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
@@ -445,10 +540,16 @@ public class UserDAO extends AbstractDAO<User> {
             }
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
                 log.trace("Can't close result set: " + e);
@@ -470,7 +571,12 @@ public class UserDAO extends AbstractDAO<User> {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
+            DataSource dataSource = connectionPool.setUpPool();
+            connectionPool.printDbStatus();
+            log.trace("Creating connection");
+            connection = dataSource.getConnection();
             log.trace("Creating prepared statement");
             preparedStatement = connection.prepareStatement(query);
             log.trace("Creating result set");
@@ -481,10 +587,16 @@ public class UserDAO extends AbstractDAO<User> {
             log.trace("Obtained id = " + id);
         } catch (SQLException e) {
             log.warn("SQL exception caught: " + e);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
-                preparedStatement.close();
-                resultSet.close();
+                if(preparedStatement != null)
+                    preparedStatement.close();
+                if(resultSet != null)
+                    resultSet.close();
+                if(connection != null)
+                    connection.close();
             } catch (SQLException e) {
                 log.trace("Can't close prepared statement: " + e);
                 log.trace("Can't close result set: " + e);

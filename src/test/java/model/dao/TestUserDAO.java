@@ -5,6 +5,7 @@ import model.data.dao.connection.ConnectionManager;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
+import model.utility.MD5Handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,9 +31,9 @@ public class TestUserDAO {
     public static Collection data(){
         return Arrays.asList( new Object[][]{
                         {
-                                new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email1211136@gmail.com")
+                                new User.Builder().withName("Alex").withSurname("Volkov").withEmail("e176n12o16@gmail.com")
                                         .withLifestyle(Lifestyle.ACTIVE).withWeight(87.0).withHeight(187.2).withPassword("root")
-                                        .withUsername("my_username1211136").withSex(Sex.MALE).withAge(19).build()
+                                        .withUsername("my768d12s_uen36").withSex(Sex.MALE).withAge(19).build()
                         }
                 }
         );
@@ -61,8 +62,11 @@ public class TestUserDAO {
     @Test
     public void testCreate(){
         userDAO.create(user);
+        System.out.println("User: " + user);
         System.out.println(user.getId());
         User curUser = userDAO.findEntityById(user.getId());
+//        System.out.println(user);
+        System.out.println("Found user: " + curUser);
         assertEquals(user, curUser);
         userDAO.delete(user.getId());
     }
@@ -92,13 +96,13 @@ public class TestUserDAO {
         assertEquals(user, tempUser);
     }
 
+    //TODO: PASSWORD!!!
     @Test
     public void testUpdate(){
-        String curEmail = "val@gmail.com";
-        String curPass = "poajsd";
+        String curEmail = "val89689@gmail.com";
         userDAO.create(user);
         user.setEmail(curEmail);
-        user.setPassword(curPass);
+
         userDAO.update(user, user.getId());
         User userTemp = userDAO.findEntityById(user.getId());
         assertEquals(user, userTemp);

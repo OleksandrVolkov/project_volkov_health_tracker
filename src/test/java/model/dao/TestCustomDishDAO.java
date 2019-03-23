@@ -47,12 +47,12 @@ public class TestCustomDishDAO {
     public static Collection data(){
         return Arrays.asList( new Object[][]{
                         {
-                            new CustomDish("NewCustomDish9"),
+                            new CustomDish("NewCustomDish19"),
                             new Nutrients(122.1, 321.1, 432.1),
-                            new DishType("newDishType9"),
-                            new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email121@gmail.com")
+                            new DishType("newDishType19"),
+                            new User.Builder().withName("Alex").withSurname("Volkov").withEmail("email13221@gmail.com")
                                         .withLifestyle(Lifestyle.ACTIVE).withWeight(87.0).withHeight(187.2).withPassword("root")
-                                        .withUsername("my_username121").withSex(Sex.MALE).withAge(19).build()
+                                        .withUsername("my_username1231").withSex(Sex.MALE).withAge(19).build()
 
                         }
                 }

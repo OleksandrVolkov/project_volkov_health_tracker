@@ -13,8 +13,11 @@ public class ConnectionManager {
     private static String url = "jdbc:mysql://127.0.0.1:3306/final_project";
     static Statement statement;
 
+    static class BasicDataSource {
 
-    public static Connection getConnection(){
+    }
+
+    public synchronized Connection getConnection(){
         try {
             if(connection == null) {
                 Driver driver = new com.mysql.jdbc.Driver();
@@ -23,7 +26,7 @@ public class ConnectionManager {
                 properties.put("password", "");
                 connection = driver.connect(url, properties);
                 statement = connection.createStatement();
-            }else {
+            } else {
                 return connection;
             }
         } catch (SQLException e) {
@@ -32,4 +35,8 @@ public class ConnectionManager {
         }
         return connection;
     }
+
+//    public static Connection getConnection2(){
+//
+//    }
 }

@@ -30,7 +30,7 @@ public class TestDishTypeDAO {
 
     @Parameterized.Parameters
     public static Collection data(){
-        return Arrays.asList(new DishType("NewCustomDish155"));
+        return Arrays.asList(new DishType("NewCustomDish152"));
     }
 
     @Before
