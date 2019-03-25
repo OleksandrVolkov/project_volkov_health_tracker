@@ -9,31 +9,82 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <title>Title</title>
     <script src="jquery-3.3.1.min.js"></script>
+    <style>
+        .main{
+
+        }
+    </style>
 </head>
 <body>
-    <h1>Add a dish that yo ate</h1>
-    <button onclick="myFunction()">Add a dish</button><br>
+<div class="jumbotron text-center">
+    <a class="btn btn-primary btn-lg active" href="/view/cabinet.jsp">Back to cabinet</a>
+    <h1>Check your diet</h1>
+    <p>You can verify whether your diet is healthy choosing among added and pre-set dishes</p>
+</div>
+<div class="lang_select">
+    <a class="langLink">
+        <form method="get" action="/load_data">
+            <select onchange="this.form.submit();" name="lang">
+                <option hidden disabled selected>Choose language:</option>
+                <option value="en">English</option>
+                <option value="ru">Russian</option>
+                <option value="ua">Ukrainian</option>
+            </select>
+            <input type="hidden" name="action" value="load_login">
+        </form>
+    </a>
+</div>
+<div class="text-center">
+    <h1>Add a dish to your daily diet</h1>
+    <div id="main">
+        <button onclick="myFunction()">Add a dish</button><br>
 
-    <form action="/body" id="mainForm">
-        <%--<select name="cars" id="selectCars" form="mainForm">--%>
-            <%--<option value="volvo">Volvo</option>--%>
-            <%--<option value="saab">Saab</option>--%>
-            <%--<option value="fiat">Fiat</option>--%>
-            <%--<option value="audi">Audi</option>--%>
-        <%--</select>--%>
-        <br><br>
-        <input type="submit">
-        <input type="hidden" name="action" value="checkDiet">
-    </form>
+        <form action="/body" id="mainForm">
+            <%--<select name="cars" id="selectCars" form="mainForm">--%>
+                <%--<option value="volvo">Volvo</option>--%>
+                <%--<option value="saab">Saab</option>--%>
+                <%--<option value="fiat">Fiat</option>--%>
+                <%--<option value="audi">Audi</option>--%>
+            <%--</select>--%>
+            <br><br>
+            <input type="submit">
+            <input type="hidden" name="action" value="checkDiet">
+        </form>
+    </div>
+</div>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                This application provides you an opportunity to check whether your daily diet is healthy via Harris-Benedict equation.
+                You can also see your norm daily values of the nutrients and calories
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <p>
+                    Contact us<br>
+                    Address: Povitryanoflotsky avenue, 43<br>
+                    Phone number: +38(050)7864324
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var selectCounter = 2;
     function myFunction() {
         form = document.getElementById("mainForm");
         var select = document.createElement("SELECT");
         var cur_it = "food_item_".concat(selectCounter);
+
         alert(cur_it);
         select.setAttribute("name", cur_it);
         select.setAttribute("form", "mainForm");
+        select.setAttribute("class", "browser-default custom-select custom-select-lg mb-3");
         selectCounter++;
 
         <%--<c:set var = "curString" scope = "session" value = "${dishes.get(0).key}"/>--%>

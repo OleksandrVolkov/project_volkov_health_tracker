@@ -360,6 +360,8 @@ public class MySQLUserDAO implements UserDAO {
      * @return boolean It returns the boolean value depending on whether user was successfully validated.
      */
     public boolean verify(String username, String password){
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
         log.info("Verifying user with username = " + username);
         String query = "SELECT * FROM users WHERE username = ? AND password = ?;";
         PreparedStatement preparedStatement = null;

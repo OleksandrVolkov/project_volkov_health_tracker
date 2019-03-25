@@ -13,6 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ *  <h1>AddNewDishAction class</h1>
+ *  AddNewDishAction is an implementation class of the Action interface.
+ *  It adds a new custom dish to the personal cabinet of the user.
+ *
+ * @author  Oleksandr Volkov
+ * @version 1.0
+ * @since   2019-03-22
+ */
 public class AddNewDishAction implements Action{
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

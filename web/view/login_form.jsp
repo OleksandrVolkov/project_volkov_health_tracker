@@ -3,7 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">--%>
+    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--%>
+    <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>--%>
+
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -110,41 +115,60 @@
             border: 3px solid black;
             border-radius: 5px;
         }
+        .lang_select{
+            background-color: #474e5d;
+        }
 
     </style>
 </head>
 <body>
 
+
+
 <div id="id01" class="modal mod3">
+    <div class="lang_select">
+        <a class="langLink">
+            <form method="get" action="/load_data">
+                <select onchange="this.form.submit();" name="lang">
+                    <option hidden disabled selected>Choose language:</option>
+                    <option value="en">English</option>
+                    <option value="ru">Russian</option>
+                    <option value="ua">Ukrainian</option>
+                </select>
+                <input type="hidden" name="action" value="load_login">
+            </form>
+        </a>
+    </div>
+    <script>
+    </script>
 
     <form action="/account" class="modal-content" method="post">
-            <h1>Log in</h1>
-            <p>Please fill in this form to log in (?) an account.</p>
+            <h1>${language['formName']}</h1>
+            <p>${language['fillNeededData']}</p>
             <hr>
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
+            <label for="username"><b>${language['usernameField']}</b></label>
+            <input type="text" placeholder="${language['enterUsername']}" name="username" required>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label for="psw"><b>${language['passwordField']}</b></label>
+            <input type="password" placeholder="${language['enterPassword']}" name="psw" required>
 
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+            <label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>
+            <input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>
 
             <c:if test = "${notValid}">
                 <span style="color:red;">No such user</span>
             </c:if>
 
             <hr>
-            <button type="submit" class="registerbtn">Login</button>
-            <button id = "cancel" type="button" class="registerbtn">Cancel</button>
+            <button type="submit" class="registerbtn">${language['registerButton']}</button>
+            <button id = "cancel" type="button" class="registerbtn">${language['cancelButton']}</button>
 
             <input type="hidden" name="action" value="login">
         <div class="container signin">
-            <p>Don't have an account? <a href="registration_form.jsp">Register</a>.</p>
+            <p>${language['noAccount']}</p>
         </div>
     </form>
 </div>
-
 
 <script type="text/javascript">
     document.getElementById("cancel").onclick = function () {

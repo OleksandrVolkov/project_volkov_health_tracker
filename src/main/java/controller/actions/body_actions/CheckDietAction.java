@@ -15,7 +15,15 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ *  <h1>CheckDietAction class</h1>
+ *  CheckDietAction is an implementation class of the Action interface.
+ *  It checks diet by the filled values.
+ *
+ * @author  Oleksandr Volkov
+ * @version 1.0
+ * @since   2019-03-22
+ */
 public class CheckDietAction implements Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

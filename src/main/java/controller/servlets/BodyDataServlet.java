@@ -25,7 +25,6 @@ public class BodyDataServlet extends HttpServlet{
     public void init(ServletConfig config) throws ServletException {
         actionMap.put("addNewDish", new AddNewDishAction());
         actionMap.put("aboutYourself", new ShowInfoAboutYourselfAction());
-        actionMap.put("normIndicators", new ShowNormIndicatorsAction());
         actionMap.put("checkDiet", new CheckDietAction());
         actionMap.put("update_user_data", new UpdateUserDataAction());
     }

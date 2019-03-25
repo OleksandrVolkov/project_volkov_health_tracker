@@ -45,18 +45,6 @@ public class UpdateUserDataAction implements Action {
             age = Integer.parseInt(ageStr);
         }
 
-
-
-
-
-//        System.out.println(name);
-//        System.out.println(surname);
-//        System.out.println(username);
-//        System.out.println(password);
-//        System.out.println(height);
-//        System.out.println(weight);
-//        System.out.println(age);
-
         HttpSession httpSession = request.getSession();
         String currentUsername = (String) httpSession.getAttribute("LOGGED_USER");
         UserService userService = new UserService();

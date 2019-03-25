@@ -5,6 +5,7 @@ import controller.actions.ActionHandler;
 import controller.actions.account_actions.LogInAction;
 import controller.actions.account_actions.LogOutAction;
 import controller.actions.account_actions.RegisterAction;
+import controller.actions.account_actions.ValidateFormAction;
 import view.View;
 
 import javax.servlet.ServletConfig;
@@ -26,6 +27,7 @@ public class AccountServlet extends HttpServlet{
     public void init(ServletConfig config) throws ServletException {
         actionMap.put("logout", new LogOutAction());
         actionMap.put("login", new LogInAction());
+        actionMap.put("validate", new ValidateFormAction());
         actionMap.put("register", new RegisterAction());
     }
 

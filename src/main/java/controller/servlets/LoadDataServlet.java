@@ -2,9 +2,7 @@ package controller.servlets;
 
 import controller.actions.Action;
 import controller.actions.ActionHandler;
-import controller.actions.load_actions.LoadDishesToCheck;
-import controller.actions.load_actions.LoadNormValuesAction;
-import controller.actions.load_actions.LoadToAddCustomDishAction;
+import controller.actions.load_actions.*;
 import view.View;
 
 import javax.servlet.ServletConfig;
@@ -27,6 +25,10 @@ public class LoadDataServlet extends HttpServlet{
         actionMap.put("loadToCheckDiet", new LoadDishesToCheck());
         actionMap.put("load_to_add", new LoadToAddCustomDishAction());
         actionMap.put("load_norm_values", new LoadNormValuesAction());
+        actionMap.put("load_registration", new LoadRegistrationPropertiesAction());
+        actionMap.put("load_lang", new LoadLanguageAction());
+        actionMap.put("load_login", new LoadLoginFormAction());
+        actionMap.put("load_cabinet", new LoadCabinetValues());
     }
 
     @Override
@@ -37,7 +39,7 @@ public class LoadDataServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String actionStr = req.getParameter("action");
-
+        System.out.println("ACTION: " + actionStr);
         ActionHandler actionHandler = new ActionHandler(req, resp);
         actionHandler.execute(actionMap, actionStr);
 

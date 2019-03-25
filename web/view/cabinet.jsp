@@ -28,6 +28,7 @@
         body{
             font-size: 20pt;
         }
+
     </style>
 </head>
 <body>
@@ -40,45 +41,62 @@
         <%--<li><a href="#">JavaScript</a></li>--%>
     <%--</ul>--%>
 <%--</div>--%>
+<div class="jumbotron text-center">
+        <a class="btn btn-primary btn-lg active" href="#">${language['exitAccount']}</a>
+        <h1>${language['welcomeTitle']}</h1>
+    </div>
+</div>
+<%--<div class="col-sm-6">--%>
+    <%--<div class="dropdown">--%>
+        <%--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">${language['chooseLanguage']}--%>
+            <%--<span class="caret"></span></button>--%>
+        <%--<ul class="dropdown-menu">--%>
+            <%--<li><a href="#">${language['en']}</a></li>--%>
+            <%--<li><a href="#">${language['ru']}</a></li>--%>
+            <%--<li><a href="#">${language['ua']}</a></li>--%>
+        <%--</ul>--%>
+    <%--</div>--%>
+<%--</div>--%>
+<div class="lang_select">
+    <a class="langLink">
+        <form method="get" action="/load_data">
+            <select onchange="this.form.submit();" name="lang">
+                <option hidden disabled selected>${language['chooseLanguage']}</option>
+                <option value="en">${language['en']}</option>
+                <option value="ru">${language['ru']}</option>
+                <option value="ua">${language['ua']}</option>
+            </select>
+            <input type="hidden" name="action" value="load_cabinet">
+        </form>
+    </a>
+</div>
+<br>
+<br>
 
 <div class="container">
-    <div class="row">
-        <div class="col-sm-11">
-
-        </div>
-        <div class="col-sm-1">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Change language
-                    <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Russian</a></li>
-                    <li><a href="#">Ukrainian</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
     <br>
-
         <div class="row">
                     <div class="card custom_card" style="width: 100%; height: 20rem">
                         <%--<img class="card-img-top" src="" alt="Card image cap">--%>
                         <div class="card-body">
-                            <h2 class="card-title">Дневной рацион</h2>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-
-                            <a href="/load_data?action=loadToCheckDiet" class="btn btn-primary">Go somewhere</a>
+                            <h2 class="card-title">${language['checkDietTitle']}</h2>
+                            <p class="card-text">${language['checkDietDescription']}</p>
+                            <a href="/load_data?action=loadToCheckDiet" class="btn btn-primary">${language['followLink']}</a>
                         </div>
                     </div>
         </div>
+
+
+
+
 
         <div class="row">
                 <div class="card custom_card" style="width: 100%; height: 20rem">
                     <%--<img class="card-img-top" src="" alt="Card image cap">--%>
                     <div class="card-body">
-                        <h2 class="card-title">Добавить тип еды</h2>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="/load_data?action=load_to_add" class="btn btn-primary">Go somewhere</a>
+                        <h2 class="card-title">${language['addDishTitle']}</h2>
+                        <p class="card-text">${language['addDishDescription']}</p>
+                        <a href="/load_data?action=load_to_add" class="btn btn-primary">${language['followLink']}</a>
                     </div>
                 </div>
         </div>
@@ -87,9 +105,9 @@
                 <div class="card custom_card" style="width: 100%; height: 20rem">
                     <%--<img class="card-img-top" src="" alt="Card image cap">--%>
                     <div class="card-body">
-                        <h2 class="card-title">Посмотреть норму</h2>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="/load_data?action=load_norm_values" class="btn btn-primary">Go somewhere</a>
+                        <h2 class="card-title">${language['normValuesTitle']}</h2>
+                        <p class="card-text">${language['normValuesDescription']}</p>
+                        <a href="/load_data?action=load_norm_values" class="btn btn-primary">${language['followLink']}</a>
                     </div>
                 </div>
         </div>
@@ -98,9 +116,9 @@
                 <div class="card custom_card" style="width: 100%;height: 20rem;">
                     <%--<img class="card-img-top" src="" alt="Card image cap">--%>
                     <div class="card-body">
-                        <h2 class="card-title">О себе</h2>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="/body?action=aboutYourself" class="btn btn-primary">Go somewhere</a>
+                        <h2 class="card-title">${language['checkInfoTitle']}</h2>
+                        <p class="card-text">${language['checkInfoDescription']}</p>
+                        <a href="/body?action=aboutYourself" class="btn btn-primary">${language['followLink']}</a>
                     </div>
                 </div>
         </div>
@@ -112,6 +130,27 @@
     <br>
     <br>
 
+</div>
+
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                ${language['footerDescription']}
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <p>
+                        ${language['footerContactUs']}<br>
+                        ${language['footerAddress']}<br>
+                        ${language['footerPhoneNumber']}
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -10,8 +10,6 @@ import model.entities.enums.DatabaseType;
  *  used to create objects) to create the relative implementation of the databse type of the DishTypeDAO
  *  class.
  *
- *
- *
  * @author  Oleksandr Volkov
  * @version 1.0
  * @since   2019-03-22

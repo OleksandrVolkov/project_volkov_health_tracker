@@ -115,69 +115,82 @@
 <body>
 
 <div id="id01" class="modal mod3">
+    <div class="lang_select">
+        <a class="langLink">
+            <form method="get" action="/load_data">
+                <select onchange="this.form.submit();" name="lang">
+                    <option hidden disabled selected>${language['chooseLanguage']}</option>
+                    <option value="en">${language['en']}</option>
+                    <option value="ru">${language['ru']}</option>
+                    <option value="ua">${language['ua']}</option>
+                </select>
+                <input type="hidden" name="action" value="load_login">
+            </form>
+        </a>
+    </div>
     <form action="/account" class="modal-content" method="post" id="regform">
-            <h1>Register</h1>
-            <p>Please fill in this form to create an account.</p>
+            <h1>${language['formName']}</h1>
+            <p>${language['fillNeededData']}</p>
             <hr>
-            <label for="name"><b>Name</b></label>
-            <input type="text" placeholder="Enter Your Name" name="name" required>
+            <label for="name"><b>${language['nameField']}</b></label>
+            <input type="text" placeholder="${language['enterName']}" name="name" required>
             <c:if test = "${!isValidName}">
-                <span>Not valid name</span> <br><br>
+                <span>${language['wrongName']}</span> <br><br>
             </c:if>
 
-            <label for="surname"><b>Surname</b></label>
-            <input type="text" placeholder="Enter Surname" name="surname" required>
+            <label for="surname"><b>${language['surnameField']}</b></label>
+            <input type="text" placeholder="${language['enterSurname']}" name="surname" required>
             <c:if test = "${!isValidSurname}">
-                <span>Not valid surname</span> <br><br>
+                <span>${language['wrongSurname']}</span> <br><br>
             </c:if>
 
-            <label for="age"><b>Age</b></label>
-            <input type="text" placeholder="Enter Your Age" name="age" required>
+            <label for="age"><b>${language['ageField']}</b></label>
+            <input type="text" placeholder="${language['enterAge']}" name="age" required>
             <c:if test = "${!isValidAge}">
-                <span>Not valid age</span> <br><br>
+                <span>${language['wrongAge']}</span> <br><br>
             </c:if>
 
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required>
+            <label for="email"><b>${language['emailField']}</b></label>
+            <input type="text" placeholder="${language['enterEmail']}" name="email" required>
             <c:if test = "${!isValidEmail}">
-                <span>Not valid email</span> <br><br>
+                <span>${language['wrongEmail']}</span> <br><br>
             </c:if>
             <c:if test = "${!isNotTakenEmail}">
-                <span>Email is already taken</span> <br><br>
+                <span>${language['busyEmail']}</span> <br><br>
             </c:if>
 
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
+            <label for="username"><b>${language['usernameField']}</b></label>
+            <input type="text" placeholder="${language['enterUsername']}" name="username" required>
             <c:if test = "${!isValidUsername}">
-                <span>Not valid username</span> <br><br>
+                <span>${language['wrongUsername']}</span> <br><br>
             </c:if>
             <c:if test = "${!isNotTakenUsername}">
-                <span>Username is already taken</span> <br><br>
+                <span>${language['busyUsername']}</span> <br><br>
             </c:if>
 
-            <label for="height"><b>Height</b></label>
-            <input type="text" placeholder="Enter Height" name="height" required>
+            <label for="height"><b>${language['heightField']}</b></label>
+            <input type="text" placeholder="${language['enterHeight']}" name="height" required>
             <c:if test = "${!isValidHeight}">
-                <span>Not valid height</span> <br><br>
+                <span>${language['wrongHeight']}</span> <br><br>
             </c:if>
 
-            <label for="weight"><b>Weight</b></label>
-            <input type="text" placeholder="Enter Your Weight" name="weight" required>
+            <label for="weight"><b>${language['weightField']}</b></label>
+            <input type="text" placeholder="${language['enterWeight']}" name="weight" required>
             <c:if test = "${!isValidWeight}">
-                <span>Not valid weight</span> <br><br>
+                <span>${language['wrongWeight']}</span> <br><br>
             </c:if>
 
 
                   <%--<input type="text" placeholder="Enter Your Weight" name="sex" required>--%>
 
-        <label for="sex"><b>Sex</b></label>
+        <label for="sex"><b>${language['sexField']}</b></label>
         <select name="sex" required>
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select>
         <br><br>
 
-        <label for="lifestyle"><b>Lifestyle</b></label>
+        <label for="lifestyle"><b>${language['lifestyleField']}</b></label>
         <select name="lifestyle" required>
             <option value="passive">Passive</option>
             <option value="moderate">Moderate</option>
@@ -187,21 +200,21 @@
         </select>
         <br><br>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label for="psw"><b>${language['passwordField']}</b></label>
+            <input type="password" placeholder="${language['enterPassword']}" name="psw" required>
 
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+            <label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>
+            <input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>
             <c:if test = "${!isValidPassword}">
-                <span>Not valid password</span> <br><br>
+                <span>${language['wrongPassword']}</span> <br><br>
             </c:if>
             <hr>
-            <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+            <p>${language['termsPrivacy']}.</p>
 
-            <button type="submit" class="registerbtn">Register</button>
-            <button id = "cancel" type="button" class="registerbtn">Cancel</button>
+            <button type="submit" class="registerbtn">${language['registerButton']}</button>
+            <button id = "cancel" type="button" class="registerbtn">${language['cancelButton']}</button>
 
-            <input type="hidden" name="action" value="register">
+            <input type="hidden" name="action" value="validate">
 
         <div class="container signin">
             <p>Already have an account? <a href="#">Sign in</a>.</p>
