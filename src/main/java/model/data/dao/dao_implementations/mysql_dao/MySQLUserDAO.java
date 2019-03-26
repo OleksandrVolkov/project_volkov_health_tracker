@@ -5,7 +5,7 @@ import model.data.dao.dao_interfaces.UserDAO;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
-import model.utility.MD5Handler;
+import controller.utility.MD5Handler;
 import org.apache.log4j.Logger;
 import javax.sql.DataSource;
 

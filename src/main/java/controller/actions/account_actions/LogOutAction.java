@@ -1,6 +1,7 @@
 package controller.actions.account_actions;
 
 import controller.actions.Action;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,9 +15,17 @@ import javax.servlet.http.HttpServletResponse;
  * @since   2019-03-22
  */
 public class LogOutAction implements Action {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(LogOutAction.class);
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        log.info("Loging out an account");
+        log.trace("Getting session attributes");
         request.getSession().setAttribute("LOGGED_USER", null);
-        return "/view/login_form.jsp";
+        log.trace("Returning url");
+        return "/load_data?action=load_login";
     }
 }

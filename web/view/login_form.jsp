@@ -152,8 +152,8 @@
             <label for="psw"><b>${language['passwordField']}</b></label>
             <input type="password" placeholder="${language['enterPassword']}" name="psw" required>
 
-            <label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>
-            <input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>
+            <%--<label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>--%>
+            <%--<input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>--%>
 
             <c:if test = "${notValid}">
                 <span style="color:red;">No such user</span>
@@ -165,7 +165,7 @@
 
             <input type="hidden" name="action" value="login">
         <div class="container signin">
-            <p>${language['noAccount']}</p>
+            <a href="/load_data?action=load_registration">${language['noAccount']}</a>
         </div>
     </form>
 </div>

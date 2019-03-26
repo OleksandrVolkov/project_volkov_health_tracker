@@ -7,6 +7,7 @@ import model.data.services.UserService;
 import model.entities.Nutrients;
 import model.entities.User;
 import model.entities.enums.Language;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,16 +19,25 @@ import java.util.Map;
 //TODO:: UNIQUE VALUES IN THE DATABASE
 
 public class LoadNormValuesAction implements Action {
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(LoadNormValuesAction.class);
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        log.info("Loading norm values");
         String url = "/view/norm_values.jsp";
 
         FoodCalculator foodCalculator = new FoodCalculator();
+        log.trace("Getting username from the session");
         HttpSession httpSession = request.getSession();
         String username = (String) httpSession.getAttribute("LOGGED_USER");
         UserService userService = new UserService();
+        log.trace("Finding user by username = " + username);
         User user = userService.findUserByUsername(username);
 
+        log.trace("Getting double values");
         Double preCallories = foodCalculator.neededCallories(user);
 
         Nutrients nutrients = foodCalculator.getNeededNutrients(preCallories);
@@ -41,38 +51,27 @@ public class LoadNormValuesAction implements Action {
         nutrients.setCarbohydrates(getRoundedValue(nutrients.getCarbohydrates()));
         nutrients.setFats(getRoundedValue(nutrients.getFats()));
 
+        log.trace("Setting attributes to the request");
         request.setAttribute("callories", callories);
         request.setAttribute("nutrients", nutrients);
         request.setAttribute("amr", amr);
         request.setAttribute("bmr", bmr);
 
-        String lang = request.getParameter("lang");
-        if(lang != null && !lang.equals("")){
-            System.out.println("NOT EQULAS TO NULL: " + lang);
-            request.getServletContext().setAttribute("lang", lang);
-        } else {
-            String val = (String)request.getServletContext().getAttribute("lang");
-            if(val != null){
-                request.getServletContext().setAttribute("lang", val);
-                System.out.println(val + " AAAAA");
-                lang = val;
-            }else {
-                System.out.println("EQUALS TO NULL: " + lang);
-                request.getServletContext().setAttribute("lang", "en");
-                lang = "en";
-            }
-        }
+        log.trace("Getting language value");
+        LanguageHandler languageHandler = new LanguageHandler();
+        String lang = languageHandler.getLangValue(request, request.getParameter("lang"));
 
-        Map<String, String> authForm = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
-        authForm.put("lang", lang);
-        System.out.println(authForm);
+        log.trace("Getting norm values");
+        Map<String, String> normValues = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
+//        normValues.put("lang", lang);
 
-        request.setAttribute("language", authForm);
+        request.setAttribute("language", normValues);
 
+        log.trace("Returning url: " + url);
         return url;
     }
-
     public Double getRoundedValue(double val){
+        log.trace("Getting rounded value");
         return BigDecimal.valueOf(val).
                 setScale(1, RoundingMode.HALF_UP)
                 .doubleValue();

@@ -5,10 +5,11 @@
     <title>Title</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">--%>
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--%>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>--%>
+    <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>--%>
     <style>
         .hidden_input{
             display: none;
@@ -23,14 +24,14 @@
 </div>
 <div class="lang_select">
     <a class="langLink">
-        <form method="get" action="/body">
+        <form method="get" action="/load_data">
             <select onchange="this.form.submit();" name="lang">
                 <option hidden disabled selected>${language['chooseLanguage']}</option>
                 <option value="en">${language['en']}</option>
                 <option value="ru">${language['ru']}</option>
                 <option value="ua">${language['ua']}</option>
             </select>
-            <input type="hidden" name="action" value="aboutYourself">
+            <input type="hidden" name="action" value="load_info">
         </form>
     </a>
 </div>
@@ -59,10 +60,10 @@
             <br>
 
 
-        <h1 id="password">${language['passwordField']} ${password}</h1>
-        <button onclick="change('password')" type="button"> ${language['changeButton']} </button>
-        <input class="hidden_input" id="password_input" name="password" type="text">
-        <br>
+        <%--<h1 id="password">${language['passwordField']} ${password}</h1>--%>
+        <%--<button onclick="change('password')" type="button"> ${language['changeButton']} </button>--%>
+        <%--<input class="hidden_input" id="password_input" name="password" type="text">--%>
+        <%--<br>--%>
 
         <h1 id="height">${language['heightField']} ${height}</h1>
         <button onclick="change('height')" type="button"> ${language['changeButton']} </button>

@@ -2,16 +2,27 @@ package controller.actions.load_actions;
 
 import controller.actions.Action;
 import controller.utility.LanguageHandler;
+import model.data.services.UserService;
+import model.entities.User;
 import model.entities.enums.Language;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class LoadRegistrationPropertiesAction implements Action{
+    /**
+     * This is a logger to write log messages during the execution of a program
+     */
+    private static Logger log = Logger.getLogger(LoadRegistrationPropertiesAction.class);
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        log.trace("Loading registration properties");
         String url = "/view/registration_form.jsp";
+
+        log.trace("Setting attributes");
                     request.setAttribute("isValidEmail", true);
                     request.setAttribute("isValidName", true);
                     request.setAttribute("isValidUsername", true);
@@ -23,51 +34,15 @@ public class LoadRegistrationPropertiesAction implements Action{
                     request.setAttribute("isNotTakenEmail", true);
                     request.setAttribute("isNotTakenUsername", true);
 
+        log.trace("Getting language value");
+        LanguageHandler languageHandler = new LanguageHandler();
+        String lang = languageHandler.getLangValue(request, request.getParameter("lang"));
 
+        log.trace("Getting registration properties");
+        Map<String, String> regProps = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
+        request.setAttribute("language", regProps);
 
-
-//        String lang = request.getParameter("lang");
-//        if(lang != null && !lang.equals("")){
-//            request.getServletContext().setAttribute("lang", lang);
-//        } else {
-//            request.getServletContext().setAttribute("lang", "en");
-//            lang = "en";
-//        }
-
-        String lang = request.getParameter("lang");
-        if(lang != null && !lang.equals("")){
-            System.out.println("NOT EQULAS TO NULL: " + lang);
-            request.getServletContext().setAttribute("lang", lang);
-        } else {
-            String val = (String)request.getServletContext().getAttribute("lang");
-            if(val != null){
-                request.getServletContext().setAttribute("lang", val);
-                System.out.println(val + " AAAAA");
-                lang = val;
-            }else {
-                System.out.println("EQUALS TO NULL: " + lang);
-                request.getServletContext().setAttribute("lang", "en");
-                lang = "en";
-            }
-        }
-
-
-
-
-
-//        String lang = (String) request.getServletContext().getAttribute("lang");
-//        if(lang == null || lang.equals("")) { // If object is null reinitialize it
-//            request.getServletContext().setAttribute("lang", "en");
-//            lang = "en";
-//        }
-
-
-        Map<String, String> authForm = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
-        authForm.put("lang", lang);
-
-
-        request.setAttribute("language", authForm);
-
+        log.trace("Returning url");
         return url;
     }
 }

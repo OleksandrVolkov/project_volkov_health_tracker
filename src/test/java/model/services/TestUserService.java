@@ -4,7 +4,6 @@ import model.data.services.UserService;
 import model.entities.User;
 import model.entities.enums.Lifestyle;
 import model.entities.enums.Sex;
-import model.utility.MD5Handler;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

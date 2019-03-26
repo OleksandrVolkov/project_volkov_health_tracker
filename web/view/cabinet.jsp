@@ -5,9 +5,10 @@
     <title>Bootstrap Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <%--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">--%>
+    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--%>
+    <%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>--%>
     <style>
 
         <%----%>
@@ -42,7 +43,7 @@
     <%--</ul>--%>
 <%--</div>--%>
 <div class="jumbotron text-center">
-        <a class="btn btn-primary btn-lg active" href="#">${language['exitAccount']}</a>
+        <a class="btn btn-primary btn-lg active" href="/account?action=logout">${language['exitAccount']}</a>
         <h1>${language['welcomeTitle']}</h1>
     </div>
 </div>
@@ -118,7 +119,7 @@
                     <div class="card-body">
                         <h2 class="card-title">${language['checkInfoTitle']}</h2>
                         <p class="card-text">${language['checkInfoDescription']}</p>
-                        <a href="/body?action=aboutYourself" class="btn btn-primary">${language['followLink']}</a>
+                        <a href="/body?action=update_user_data" class="btn btn-primary">${language['followLink']}</a>
                     </div>
                 </div>
         </div>

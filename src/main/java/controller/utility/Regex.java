@@ -1,4 +1,4 @@
-package model.utility;
+package controller.utility;
 
 public interface Regex {
     String NAME_REGEX = "[A-Z]{1,1}[a-z]{2,19}";
@@ -9,4 +9,7 @@ public interface Regex {
     String LOGIN_REGEX = "^[a-z0-9_-]{3,15}$";
     String PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,15})";
     String PRICE_REGEX = "[0-9]{1,13}(.[0-9]*)?";
+    String DECIMAL_REGEX = "^-?\\d*\\.\\d+$";
+    String INTEGER_REGEX = "^-?\\d+$";
+    String DOUBLE_REGEX = DECIMAL_REGEX + "|" + INTEGER_REGEX;
 }

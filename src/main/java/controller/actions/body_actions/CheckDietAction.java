@@ -6,12 +6,15 @@ import model.data.dao.dao_interfaces.AbstractDAO;
 import model.data.dao.dao_implementations.mysql_dao.MySQLCustomDishDAO;
 import model.data.dao.dao_implementations.mysql_dao.MySQLDishDAO;
 import model.data.dao.dao_implementations.mysql_dao.MySQLUserDAO;
+import model.data.services.UserService;
 import model.entities.Dish;
 import model.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +45,11 @@ public class CheckDietAction implements Action {
                 abstractDAO = new MySQLCustomDishDAO();
             else if(temp.equals("dis"))
                 abstractDAO = new MySQLDishDAO();
+
             String id = notParsedVal.substring(4, notParsedVal.length());
 
             int dishId = Integer.parseInt(id);
 
-            System.out.println("Dish id :::  " + dishId);
-            System.out.println("Find entity by id " + dishId + " = " + abstractDAO.findEntityById(dishId));
             dishesList.add((Dish) abstractDAO.findEntityById(dishId));
             System.out.println("Iterated dishes:: " + dishesList);
             i++;
@@ -58,15 +60,39 @@ public class CheckDietAction implements Action {
         FoodCalculator foodCalculator = new FoodCalculator();
         HttpSession httpSession = request.getSession();
         String username = (String)httpSession.getAttribute("LOGGED_USER");
-        System.out.println("USERNAME  :::  " + username);
-        MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
-        User user = mySQLUserDAO.findUserByUsername(username);
-        System.out.println("!!!!!!!!!!" + user);
-        System.out.println("THE DIET IS GOOD ::  " + foodCalculator.isWellDiet(user, dishesList));
 
-//        String str = "Your diet is absolutely right! Keep eating in this way! Total calories:";
+        UserService userService = new UserService();
+        User user = userService.findUserByUsername(username);
+        System.out.println(foodCalculator.isWellDiet(user, dishesList));
+        System.out.println(foodCalculator.getProteinsDifference());
+        System.out.println(foodCalculator.getCarbohydratesDifference());
+        System.out.println(foodCalculator.getFatsDifference());
+        if(foodCalculator.getProteinsDifference() > 0.0){
+            request.setAttribute("isWellProteins", false);
+            request.setAttribute("exceededProteins", getRoundedValue(foodCalculator.getProteinsDifference()));
+        } else {
+            request.setAttribute("isWellProteins", true);
+        }
+        if(foodCalculator.getCarbohydratesDifference() > 0.0){
+            request.setAttribute("isWellCarbohydrates", false);
+            request.setAttribute("exceededCarbohydrates", getRoundedValue(foodCalculator.getCarbohydratesDifference()));
+        } else {
+            request.setAttribute("isWellCarbohydrates", true);
+        }
+        if(foodCalculator.getFatsDifference() > 0.0){
+            request.setAttribute("isWellFats", false);
+            request.setAttribute("exceededFats", getRoundedValue(foodCalculator.getFatsDifference()));
+        } else {
+            request.setAttribute("isWellFats", true);
+        }
+        request.setAttribute("isWellDiet", foodCalculator.isWellDiet(user, dishesList));
 
+        return "/view/result.jsp";
+    }
 
-        return "...";
+    public Double getRoundedValue(double val){
+        return BigDecimal.valueOf(val).
+                setScale(1, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

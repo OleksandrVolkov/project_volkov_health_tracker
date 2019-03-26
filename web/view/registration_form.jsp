@@ -124,7 +124,7 @@
                     <option value="ru">${language['ru']}</option>
                     <option value="ua">${language['ua']}</option>
                 </select>
-                <input type="hidden" name="action" value="load_login">
+                <input type="hidden" name="action" value="load_registration">
             </form>
         </a>
     </div>
@@ -202,9 +202,8 @@
 
             <label for="psw"><b>${language['passwordField']}</b></label>
             <input type="password" placeholder="${language['enterPassword']}" name="psw" required>
-
-            <label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>
-            <input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>
+            <%--<label for="psw-repeat"><b>${language['repeatPasswordField']}</b></label>--%>
+            <%--<input type="password" placeholder="${language['repeatPasswordField']}" name="psw-repeat" required>--%>
             <c:if test = "${!isValidPassword}">
                 <span>${language['wrongPassword']}</span> <br><br>
             </c:if>
@@ -217,7 +216,7 @@
             <input type="hidden" name="action" value="validate">
 
         <div class="container signin">
-            <p>Already have an account? <a href="#">Sign in</a>.</p>
+            <p>Already have an account? <a href="/load_data?action=load_login">Sign in</a>.</p>
         </div>
     </form>
 </div>
