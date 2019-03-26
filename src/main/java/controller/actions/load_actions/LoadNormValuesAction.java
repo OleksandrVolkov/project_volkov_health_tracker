@@ -63,7 +63,6 @@ public class LoadNormValuesAction implements Action {
 
         log.trace("Getting norm values");
         Map<String, String> normValues = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
-//        normValues.put("lang", lang);
 
         request.setAttribute("language", normValues);
 

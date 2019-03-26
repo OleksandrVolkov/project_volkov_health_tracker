@@ -41,20 +41,13 @@ public class UpdateUserDataAction implements Action {
         Integer age = 0;
 
         log.trace("Parsing double values");
-        //TODO: method numbechecking
-        if(heightStr == null || heightStr == ""){
-
-        } else{
+        if(heightStr != null && !heightStr.equals("")){
             height = Double.parseDouble(heightStr);
         }
-        if(weightStr == null || weightStr == ""){
-
-        } else{
+        if(weightStr != null && !weightStr.equals("")){
             weight = Double.parseDouble(weightStr);
         }
-        if(ageStr == null || ageStr == ""){
-
-        } else{
+        if(ageStr != null && !ageStr.equals("")){
             age = Integer.parseInt(ageStr);
         }
 

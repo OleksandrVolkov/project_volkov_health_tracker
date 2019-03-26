@@ -26,7 +26,6 @@ public class LoadCabinetValues implements Action{
 
         log.trace("Getting authForm");
         Map<String, String> cabinetMap = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
-//        authForm.put("lang", lang);
 
         request.setAttribute("language", cabinetMap);
         log.trace("Returning url: " + url);

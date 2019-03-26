@@ -170,20 +170,4 @@ public class LanguageHandler {
         return null;
     }
 
-
-
-
-
-//    private Map<String, String> getRelativeHashMap(String pageUrl, String lang){
-//        if(pageUrl == null || pageUrl.equals(""))
-//            pageUrl = "main.jsp";
-//
-//        if(lang == null || lang.equals(""))
-//            lang = "en";
-//
-//        Map<String, String> authForm = LanguageHandler.getHashMapOfValuesByPageUrl(pageUrl, Language.getLanguage(lang));
-//        authForm.put("lang", lang);
-//
-//        return authForm;
-//    }
 }

@@ -32,7 +32,6 @@ public class LoadToAddCustomDishAction implements Action{
         log.trace("Getting addDishMap");
         String lang = languageHandler.getLangValue(request, request.getParameter("lang"));
         Map<String, String> getDishMap = LanguageHandler.getHashMapOfValuesByPageUrl(url, Language.getLanguage(lang));
-//        getDishMap.put("lang", lang);
 
         request.setAttribute("language", getDishMap);
         log.trace("Returning url: " + url);

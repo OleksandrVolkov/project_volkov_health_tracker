@@ -39,7 +39,6 @@ public class CheckDietAction implements Action {
             String notParsedVal = request.getParameter("food_item_" + i);
 
             String temp = notParsedVal.substring(0, 3);
-            System.out.println(temp+" TEMP_____________________");
             AbstractDAO abstractDAO = null;
             if(temp.equals("cus"))
                 abstractDAO = new MySQLCustomDishDAO();
@@ -51,11 +50,9 @@ public class CheckDietAction implements Action {
             int dishId = Integer.parseInt(id);
 
             dishesList.add((Dish) abstractDAO.findEntityById(dishId));
-            System.out.println("Iterated dishes:: " + dishesList);
             i++;
             val = request.getParameter("food_item_" + i);
         }
-        System.out.println(dishesList);
 
         FoodCalculator foodCalculator = new FoodCalculator();
         HttpSession httpSession = request.getSession();
@@ -64,9 +61,7 @@ public class CheckDietAction implements Action {
         UserService userService = new UserService();
         User user = userService.findUserByUsername(username);
         System.out.println(foodCalculator.isWellDiet(user, dishesList));
-        System.out.println(foodCalculator.getProteinsDifference());
-        System.out.println(foodCalculator.getCarbohydratesDifference());
-        System.out.println(foodCalculator.getFatsDifference());
+
         if(foodCalculator.getProteinsDifference() > 0.0){
             request.setAttribute("isWellProteins", false);
             request.setAttribute("exceededProteins", getRoundedValue(foodCalculator.getProteinsDifference()));
